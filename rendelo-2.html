@@ -731,6 +731,7 @@ html.nm .tick .stampx{animation:none}
   var SVC = [{"k": "exam", "n": "Általános vizsgálat", "dur": "Kb. 30 perc"}, {"k": "vaccine", "n": "Oltások és féregtelenítés", "dur": "Kb. 20 perc"}, {"k": "neuter", "n": "Ivartalanítás", "dur": "Előzetes megbeszéléssel"}, {"k": "tooth", "n": "Fogászat", "dur": "Kb. 45 perc"}, {"k": "lab", "n": "Laborvizsgálat", "dur": "Kb. 15 perc"}, {"k": "scan", "n": "Ultrahang és röntgen", "dur": "Kb. 30 perc"}, {"k": "chip", "n": "Chipezés és útlevél", "dur": "Kb. 15 perc"}, {"k": "bowl", "n": "Táplálási tanácsadás", "dur": "Kb. 20 perc"}];
   var HOURS = {"1": [[8, 16]], "2": [[12, 19]], "3": [[8, 16]], "4": [[12, 19]], "5": [[8, 16]], "6": [[9, 12]], "0": []};
   var NAPOK = ['vasárnap', 'hétfő', 'kedd', 'szerda', 'csütörtök', 'péntek', 'szombat'];
+  var NAPON = ['vasárnap', 'hétfőn', 'kedden', 'szerdán', 'csütörtökön', 'pénteken', 'szombaton'];
   var NAPR = ['V', 'H', 'K', 'Sze', 'Cs', 'P', 'Szo'];
   var HON = ['január', 'február', 'március', 'április', 'május', 'június', 'július', 'augusztus', 'szeptember', 'október', 'november', 'december'];
   var $ = function (s, c) { return (c || document).querySelector(s); };
@@ -847,7 +848,8 @@ html.nm .tick .stampx{animation:none}
     for (i = 0; i < r.length; i++) if (h < r[i][0]) return { open: false, text: 'Zárva most · nyit ma ' + fmt(r[i][0]), sh: 'Zárva most', when: 'nyit ma ' + fmt(r[i][0]) };
     for (var k = 1; k <= 7; k++) {
       var d = new Date(now.getTime() + k * 864e5), rr = ranges(d);
-      if (rr.length) var w = 'nyit ' + (k === 1 ? 'holnap' : NAPOK[d.getDay()] + 'n') + ' ' + fmt(rr[0][0]); return { open: false, text: 'Zárva most · ' + w, sh: 'Zárva most', when: w };
+      if (!rr.length) continue;  /* zárt nap (pl. vasárnap): tovább a következőre */
+      var w = 'nyit ' + (k === 1 ? 'holnap' : NAPON[d.getDay()]) + ' ' + fmt(rr[0][0]); return { open: false, text: 'Zárva most · ' + w, sh: 'Zárva most', when: w };
     }
     return { open: false, text: 'Zárva most', sh: 'Zárva most', when: '' };
   }
